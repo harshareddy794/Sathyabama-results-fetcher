@@ -20,6 +20,9 @@ driver=webdriver.Chrome(path)
 reg_no_input=input("Enter register number ")
 dob_input=input("Enter data of birth ")
 
+# Driver wait for input of data
+driver.implicitly_wait(15)
+
 # This will open the web page for Sathyabama results
 driver.get('http://cloudportal.sathyabama.ac.in/sist_results_may_2020/login.php')
 
@@ -54,6 +57,8 @@ for i in range(2):
 table_search=driver.find_element_by_id('tblDisplay')
 tbody_data=table_search.find_element_by_tag_name('tbody')
 td_data=tbody_data.find_elements_by_tag_name('td')
+
+# All the raw data which is in web component format is converted into text and stored saparatly into a list object
 i=0
 lis=list()
 lis1=list()
@@ -65,11 +70,13 @@ for data in td_data:
         i=0
         lis=[]
 
-
+# List that contains all the data is transversed and stored into a excel sheet work book
 for i in range(0,len(lis1)):
     for j in range(0,len(lis1[i])):
         sheet1.write(i+1,j,lis1[i][j])
+
+# Closing the chrome web driver  
 driver.close()
+
+# Saving the excal sheet with the register number of student
 wb.save(regno_for_name+'.xls')
-
-
