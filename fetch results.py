@@ -37,46 +37,67 @@ dob_search.send_keys(dob_input)
 # Searching for submit button and clicking on it
 sumbit_search=driver.find_element_by_id('btnLogin')
 sumbit_search.send_keys(Keys.RETURN)
+try:
+    # Waiting for 5 secounds to get page to loadup
+    driver.implicitly_wait(5)
 
-# Waiting for 5 secounds to get page to loadup
-driver.implicitly_wait(5)
+    # Searching for class name stuinfo and td in that stuinfo
+    table_data=driver.find_element_by_class_name('stuinfo')
+    td_data=table_data.find_elements_by_tag_name('td')
 
-# Searching for class name stuinfo and td in that stuinfo
-table_data=driver.find_element_by_class_name('stuinfo')
-td_data=table_data.find_elements_by_tag_name('td')
-
-# Using loop to get register number and name of the student
-for i in range(2):
-    ind=str(td_data[i].text).find(':')
-    sheet1.write(0,i,((td_data[i].text)[ind+2:]))
-    if(i==0):
-        regno_for_name=(td_data[i].text)[ind+2:]
+    # Using loop to get register number and name of the student
+    for i in range(2):
+        ind=str(td_data[i].text).find(':')
+        sheet1.write(0,i,((td_data[i].text)[ind+2:]))
+        if(i==0):
+            regno_for_name=(td_data[i].text)[ind+2:]
 
 
-# Then searching for id tblDisplay to get table and searching for tbody and then finding all td in that tablebody
-table_search=driver.find_element_by_id('tblDisplay')
-tbody_data=table_search.find_element_by_tag_name('tbody')
-td_data=tbody_data.find_elements_by_tag_name('td')
+    # Then searching for id tblDisplay to get table and searching for tbody and then finding all td in that tablebody
+    table_search=driver.find_element_by_id('tblDisplay')
+    tbody_data=table_search.find_element_by_tag_name('tbody')
+    td_data=tbody_data.find_elements_by_tag_name('td')
 
-# All the raw data which is in web component format is converted into text and stored saparatly into a list object
-i=0
-lis=list()
-lis1=list()
-for data in td_data:
-    lis.append(data.text)
-    i+=1
-    if(i==9):
-        lis1.append(lis)
-        i=0
-        lis=[]
+    # All the raw data which is in web component format is converted into text and stored saparatly into a list object
+    i=0
+    lis=list()
+    lis1=list()
+    for data in td_data:
+        lis.append(data.text)
+        i+=1
+        if(i==9):
+            lis1.append(lis)
+            i=0
+            lis=[]
 
-# List that contains all the data is transversed and stored into a excel sheet work book
-for i in range(0,len(lis1)):
-    for j in range(0,len(lis1[i])):
-        sheet1.write(i+1,j,lis1[i][j])
+    # List that contains all the data is transversed and stored into a excel sheet work book
+    for i in range(0,len(lis1)):
+        for j in range(0,len(lis1[i])):
+            sheet1.write(i+1,j,lis1[i][j])
 
-# Closing the chrome web driver  
-driver.close()
+    #function which converts marks into gpa
+    def GPA(m):                        
+        if(m>=90):
+            return 10
+        elif(m>=80 & m<90):
+            return 9
+        elif(m>=70 & m<80):
+            return 8
+        elif(m>=60 & m<70):
+            return 7
+        elif(m>=50 & m<60):
+            return 6
 
-# Saving the excal sheet with the register number of student
-wb.save(regno_for_name+'.xls')
+    #calculating SGPA and writing it into excel sheet
+    sum=0
+    for i in lis1:
+        sum=sum+GPA(int(i[6]))
+    avg=sum/8
+    sheet1.write(10,0,'GRADE: '+str(avg))
+
+    # Saving the excal sheet with the register number of student
+    wb.save(regno_for_name+'.xls')
+    
+finally:
+     # Closing the chrome web driver  
+    driver.close()
