@@ -27,8 +27,8 @@ python fetch results.py
 
 ## LIBRARIES USED
 
-1. Selenium - Browser automation
-2. XLWT - Excel sheet creation and writing
+1. **Selenium** - Browser automation
+2. **XLWT** - Excel sheet creation and writing
 
 ## CONTRIBUTION 
 Your cobributions are always welcome:hugs:. Create a PR for all your contributions
