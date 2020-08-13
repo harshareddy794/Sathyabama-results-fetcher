@@ -94,7 +94,6 @@ try:
     sum=0
     for i in lis1:
         sum=sum+GPA(int(i[6]))
-        print(sum,int(i[6]))
     avg=sum/8
     sheet1.write(10,0,'GRADE: '+str(avg))
 
